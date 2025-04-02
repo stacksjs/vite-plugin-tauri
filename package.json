@@ -1,0 +1,78 @@
+{
+  "name": "vite-plugin-tauri",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "A Vite plugin to seamlessly integrate with Tauri.",
+  "author": "Chris Breuer <chris@stacksjs.org>",
+  "license": "MIT",
+  "homepage": "https://github.com/stacksjs/vite-plugin-tauri#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stacksjs/vite-plugin-tauri.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stacksjs/vite-plugin-tauri/issues"
+  },
+  "keywords": [
+    "typescript",
+    "tauri",
+    "vite",
+    "plugin",
+    "vite-plugin-tauri",
+    "development",
+    "build",
+    "desktop",
+    "mobile",
+    "app"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "import": "./dist/*"
+    }
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "bun --bun build.ts",
+    "lint": "bunx --bun eslint .",
+    "lint:fix": "bunx --bun eslint . --fix",
+    "fresh": "bunx rimraf node_modules/ bun.lock && bun i",
+    "changelog": "bunx changelogen --output CHANGELOG.md",
+    "prepublishOnly": "bun --bun run build",
+    "release": "bun run changelog && bunx bumpp package.json --all",
+    "test": "bun test",
+    "typecheck": "bun --bun tsc --noEmit",
+    "dev:docs": "bun --bun vitepress dev docs",
+    "build:docs": "bun --bun vitepress build docs",
+    "preview:docs": "bun --bun vitepress preview docs"
+  },
+  "dependencies": {
+    "@tauri-apps/cli": "^2.4.1"
+  },
+  "devDependencies": {
+    "@stacksjs/docs": "^0.70.22",
+    "@stacksjs/eslint-config": "^4.10.2-beta.3",
+    "@types/bun": "^1.2.8",
+    "bumpp": "^10.1.0",
+    "bun-plugin-dtsx": "^0.21.9",
+    "changelogen": "^0.6.1",
+    "lint-staged": "^15.5.0",
+    "simple-git-hooks": "^2.12.1",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.4"
+  },
+  "overrides": {
+    "unconfig": "0.3.10"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "bunx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts}": "bunx eslint . --fix"
+  }
+}
