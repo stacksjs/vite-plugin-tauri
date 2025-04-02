@@ -1,0 +1,146 @@
+---
+description: General information based on the latest ./README.md content
+globs: 
+alwaysApply: false
+---
+# vite-plugin-tauri
+
+> A Vite plugin to seamlessly integrate with Tauri.
+
+## Features
+
+- 🔄 **Auto Integration** _Automatically initializes and integrates Tauri with your Vite project_
+- 🛠️ **Dev Modengside your Vite dev server_
+- 📦 **Build Ready** _Configures Tauri build with your Vite output directory_
+- 🧰 **CLI Passthrough** _Supports passing Tauri CLI arguments for advanced configurations_
+- 🌐 **Multi-Environment** _Works across different platforms with proper configuration_
+- 💼 **Zero Config** _Works out of the box with sensible defaults_
+- 🧠 **Smart Detection** _Automatically detects your Tauri configuration file_
+
+## Install
+
+```bash
+npm install -D @stacksjs/vite-plugin-tauri
+# or
+yarn add -D @stacksjs/vite-plugin-tauri
+# or
+pnpm add -D @stacksjs/vite-plugin-tauri
+# or
+bun add -D @stacksjs/vite-plugin-tauri
+```
+
+## Get Started
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import Tauri from 'vite-plugin-tauri'
+
+export default defineConfig({
+  plugins: [
+    Tauri()
+  ]
+})
+```
+
+That's it! When you run your Vite development server, Tauri will automatically be initialized if not already present, and will launch alongside your Vite app.
+
+## Configuration
+
+The plugin accepts an optional configuration object. Here's an example with available options:
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import Tauri from 'vite-plugin-tauri'
+
+export default defineConfig({
+  plugins: [
+    Tauri({
+     iguration options for the plugin (reserved for future use)
+    })
+  ]
+})
+```
+
+## CLI Arguments
+
+You can pass arguments to the Tauri CLI by adding them after a double dash (`--`) and the `-t` or `--tauri` flag:
+
+```bash
+# Development mode
+npm run dev -- -t --debug
+
+# Build mode
+npm run build -- -t --debug
+```
+
+## Environment Variables
+
+- `TAURI_PATH_DEPTH`: Controls how deep the plugin searches for Tauri configuration files. Default is `3`.
+
+## Usage with Tauri
+
+This plugin works with [Tauri](https://tauri.app/), a framework for building desktop applications with web technologies.
+
+### Initializing a Ta
+If you don't have a Tauri project initialized in your directory, the plugin will automatically prompt you to create one when you run your Vite dev server:
+
+```bash
+npm run dev
+```
+
+### Tauri Configuration
+
+The plugin will automatically find your Tauri configuration file (`tauri.conf.json`, `tauri.conf.json5`, or `Tauri.toml`) and use it to configure the integration.
+
+### Tauri CLI
+
+For advanced Tauri configuration, you can use the Tauri CLI directly. The plugin is designed to work alongside the CLI without conflicts.
+
+For more information on Tauri, visit [tauri.app](https://tau
+
+## Testing
+
+```bash
+bun test
+```
+
+## Changelog
+
+Please see our [releases](https://github.cogin-tauri/releases) page for more information on what has changed recently.
+
+## Contributing
+
+Please review the [Contributing Guide](https://ntributing) for details.
+
+## Community
+
+For help, discusny other conversation that would benefit from being searchable:
+
+[Discussions on GitHub](https://github.com/stacksjs/stacks/discussions)
+
+For casual chit-chat with others using this package:
+
+[Join the Stacks Discord Server](https://discord.gg/stacksjs)
+
+## Postcardware
+
+“Software that is free, but hopes for a postcard.” We love receiving postcards from around the world showing where `vite-plugin-tauri` is being used! We showcase them on our website too.
+
+Our address: Sta665ya Vista, CA 900United States Spoe wext the following sponsors for funding Stacks develIf you are interested in becoming a sponsor, please reach out to us.
+
+- [JetBrains](https://www.jetbrains.com/)
+- [The Solana Foundation](https://solana.com/)
+
+## Credits
+
+- [Tauri](https://tauri.app/) for creating a powerful desktop app framework
+- [Chris Breuer](https://github.com/chrisbbreuer)
+- [All Contributors](https://github.com/stacksjs/vite-plugin-tauri/contributors)
+
+## License
+
+The MIT License (MIT). Please see [LICENSE](https://github.com/stacksjs/stacks/tree/main/LICENSE.md) for more information.
+
+Made with 💙
