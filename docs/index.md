@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "vite-plugin-dotenvx"
-  text: "Seamless .env decryption for Vite"
-  tagline: "Automatically decrypt your .env files during development with dotenvx integration"
+  name: "vite-plugin-tauri"
+  text: "Seamless Tauri integration for Vite"
+  tagline: "Automatically integrate Tauri with your project for building desktop & mobile apps"
   image: /images/logo-white.png
   actions:
     - theme: brand
@@ -13,21 +13,30 @@ hero:
       link: /intro
     - theme: alt
       text: View on GitHub
-      link: https://github.com/stacksjs/vite-plugin-dotenvx
+      link: https://github.com/stacksjs/vite-plugin-tauri
 
 features:
-  - title: Automatic .env Decryption
-    icon: 🔐
-    details: "Seamlessly decrypt your encrypted .env files during development."
-  - title: Multiple Environment Support
-    icon: 🌍
-    details: "Support for multiple .env files and environment-specific configurations."
-  - title: Variable Expansion
+  - title: Auto Integration & Initialization
     icon: 🔄
-    details: "Supports variable expansion and command substitution in your .env files."
-  - title: Lightweight & Configurable
-    icon: 🚀
-    details: "Simple to set up with flexible configuration options to meet your needs."
+    details: "Automatically detects and initializes Tauri in your Vite project with zero config."
+  - title: Development Mode
+    icon: 🛠️
+    details: "Launches Tauri alongside your Vite dev server with proper URL configuration."
+  - title: Build Integration
+    icon: 📦
+    details: "Seamlessly configures Tauri build with your Vite output directory for production builds."
+  - title: CLI Passthrough
+    icon: 🧰
+    details: "Pass arguments to Tauri CLI for advanced configurations and debugging."
+  - title: System Tray Apps
+    icon: 🔔
+    details: "Supports creating system tray applications that run in the notification area of your OS."
+  - title: Mobile Support
+    icon: 📱
+    details: "Build applications for iOS and Android using the same codebase as your desktop app."
+  - title: API Reference
+    icon: 📘
+    details: "Comprehensive API documentation for the plugin, CLI arguments, and environment variables."
 ---
 
 <Home />

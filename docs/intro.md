@@ -1,96 +1,49 @@
-![Social Card of this repo](https://github.com/stacksjs/vite-plugin-dotenvx/blob/main/.github/art/cover.jpg?raw=true)
+![Social Card of this repo](https://github.com/stacksjs/vite-plugin-tauri/blob/main/.github/art/cover.jpg?raw=true)
 
 # Introduction
 
-`vite-plugin-dotenvx` is a Vite plugin that seamlessly integrates with dotenvx to automatically decrypt your .env files during development.
+`vite-plugin-tauri` is a Vite plugin that seamlessly integrates with Tauri to help you build desktop applications with web technologies.
 
 ## Features
 
-- Automatic .env Decryption
-- Multiple Environment Support
-- Variable Expansion and Command Substitution
-- Support for Build Mode
-- Auto-generation of .env.example Files
-- Auto-updating of .gitignore
-- Client-side Environment Variable Exposure
-- Strict Mode and Error Handling
-- Lightweight and Configurable
+- **Auto Integration** - Automatically detects and initializes Tauri in your Vite project
+- **Dev Mode** - Launches Tauri alongside your Vite dev server
+- **Build Ready** - Seamlessly configures Tauri build with your Vite output directory
+- **CLI Passthrough** - Pass arguments to Tauri CLI for advanced configuration
+- **Zero Config** - Works out of the box with sensible defaults
+- **Smart Detection** - Automatically detects your Tauri configuration file
+- **Multi-Environment** - Works across different platforms and environments
 
-> A Vite plugin to seamlessly integrate with dotenvx for automatic decryption of .env files.
+> A Vite plugin to seamlessly integrate with Tauri for desktop application development.
 
-## What is dotenvx?
+## What is Tauri?
 
-[dotenvx](https://dotenvx.com) is a better dotenv from the creator of the original `dotenv` package. It provides:
+[Tauri](https://tauri.app/) is a framework for building tiny, blazingly fast binaries for all major desktop platforms. It allows developers to build applications for the major desktop platforms – using web technologies – bundled in a native shell for distribution.
 
-- Cross-platform compatibility (run anywhere)
-- Multi-environment support
-- Encrypted environment variables
-
-This plugin integrates with dotenvx to provide a seamless experience for Vite users, automatically decrypting your encrypted .env files during development.
+This plugin integrates with Tauri to provide a seamless experience for Vite users, automatically initializing and configuring Tauri development and builds with your Vite project.
 
 ## How It Works
 
-1. **Encrypt your .env files** - Use the dotenvx CLI to encrypt your .env files
-2. **Add the plugin to your Vite config** - Configure the plugin with your desired options
-3. **Start your Vite dev server** - The plugin automatically decrypts your .env files at runtime
+1. **Add the plugin to your Vite config** - Import and use the plugin in your Vite configuration
+2. **Start your Vite dev server** - The plugin automatically launches Tauri alongside your Vite app
+3. **Build your application** - When building your app, the plugin configures Tauri to use your Vite output directory
 
-The plugin handles all the complexity of decryption, making it easy to use encrypted .env files in your Vite projects.
+The plugin handles all the complexity of integration, making it easy to develop Tauri desktop applications with Vite.
 
-## Advanced Features
+## Environment Variables
 
-### Build Mode Support
+- `TAURI_PATH_DEPTH` - Controls how deep the plugin searches for Tauri configuration files (default: `3`)
 
-By default, the plugin only runs in development mode. You can enable it for build mode as well:
+## CLI Arguments
 
-```ts
-Dotenvx({
-  applyInBuild: true,
-  // ...other options
-})
-```
+You can pass arguments to the Tauri CLI by adding them after a double dash (`--`) and the `-t` or `--tauri` flag:
 
-### Auto-generate .env.example
+```bash
+# Development mode
+npm run dev -- -t --debug
 
-The plugin can automatically generate a `.env.example` file from your loaded environment variables:
-
-```ts
-Dotenvx({
-  generateExample: true,
-  // ...other options
-})
-```
-
-### Auto-update .gitignore
-
-The plugin can automatically add `.env.keys` to your `.gitignore` file:
-
-```ts
-Dotenvx({
-  updateGitignore: true,
-  // ...other options
-})
-```
-
-### Expose Environment Variables to the Client
-
-You can expose specific environment variables to the client-side code:
-
-```ts
-Dotenvx({
-  exposeToClient: ['VITE_.*', 'PUBLIC_.*'],
-  // ...other options
-})
-```
-
-### Strict Mode
-
-Enable strict mode to throw errors when environment variables can't be loaded:
-
-```ts
-Dotenvx({
-  strict: true,
-  // ...other options
-})
+# Build mode
+npm run build -- -t --target nsis --debug
 ```
 
 ## Sponsors
@@ -102,9 +55,9 @@ We would like to extend our thanks to the following sponsors for funding Stacks 
 
 ## Credits
 
-- [Mot](https://github.com/motdotla) for creating [dotenv](https://github.com/motdotla/dotenv) & [dotenvx](https://github.com/dotenvx/dotenvx)
+- [Tauri](https://tauri.app/) for creating a powerful desktop app framework
 - [Chris Breuer](https://github.com/chrisbbreuer)
-- [All Contributors](https://github.com/stacksjs/vite-plugin-dotenvx/contributors)
+- [All Contributors](https://github.com/stacksjs/vite-plugin-tauri/contributors)
 
 ## License
 

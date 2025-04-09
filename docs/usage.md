@@ -5,170 +5,106 @@ Using this plugin is as simple as defining it in your Vite configuration.
 ```ts
 // vite.config.{ts,js}
 import { defineConfig } from 'vite'
-import Dotenvx from 'vite-plugin-dotenvx'
+import tauri from 'vite-plugin-tauri'
 
 export default defineConfig({
   plugins: [
-    Dotenvx({
-      enabled: true, // default: true
-      verbose: true, // default: false, enables detailed logging
-      path: ['.env', '.env.local'], // default: ['.env']
-      envKeysFile: '.env.keys', // default: '.env.keys'
-      overload: false, // default: false
-      convention: 'nextjs', // optional, load envs using a convention like Next.js
-      applyInBuild: false, // default: false, apply the plugin in build mode as well
-      strict: false, // default: false, exit with code 1 if any errors are encountered
-      ignore: ['MISSING_ENV_FILE'], // optional, ignore specific errors
-      generateExample: false, // default: false, auto-generate .env.example file
-      updateGitignore: false, // default: false, auto-add .env.keys to .gitignore
-      exposeToClient: ['VITE_.*', 'PUBLIC_.*'], // optional, expose specific environment variables to the client
+    tauri({
+      // Configuration options (reserved for future use)
     })
   ]
 })
 ```
 
-## Configuration Options
+## Automatic Initialization
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `enabled` | `boolean` | `true` | Enable or disable the plugin |
-| `verbose` | `boolean` | `false` | Enable verbose logging |
-| `path` | `string \| string[]` | `['.env']` | Path to .env file(s) |
-| `envKeysFile` | `string` | `'.env.keys'` | Path to .env.keys file |
-| `overload` | `boolean` | `false` | Override existing env variables |
-| `convention` | `string` | `undefined` | Load a .env convention (e.g., 'nextjs') |
-| `applyInBuild` | `boolean` | `false` | Apply the plugin in build mode as well |
-| `strict` | `boolean` | `false` | Exit with code 1 if any errors are encountered |
-| `ignore` | `string[]` | `undefined` | Ignore specific errors |
-| `generateExample` | `boolean` | `false` | Auto-generate .env.example file |
-| `updateGitignore` | `boolean` | `false` | Auto-add .env.keys to .gitignore |
-| `exposeToClient` | `string[]` | `[]` | Expose specific environment variables to the client |
-
-## Working with Encrypted .env Files
-
-### Encrypting Your .env Files
-
-To encrypt your .env files, you'll need to use the dotenvx CLI:
+One of the key features of this plugin is automatic Tauri initialization. If you don't already have a Tauri configuration in your project, the plugin will prompt you to create one when you start your Vite development server:
 
 ```bash
-# Create a .env file
-echo "API_KEY=your_secret_key" > .env
-
-# Encrypt the .env file
-dotenvx encrypt
+npm run dev
 ```
 
-This will encrypt your .env file and create a `.env.keys` file with the encryption keys. The encrypted .env file will look something like this:
+You'll see a prompt asking if you want to initialize Tauri. If you accept, the plugin will automatically set up Tauri in your project.
+
+## Development Mode
+
+In development mode, the plugin:
+
+1. Automatically detects your Tauri configuration
+2. Launches Tauri alongside your Vite development server
+3. Configures Tauri to use your Vite dev server URL
+
+This creates a seamless development experience where your Vite app is automatically loaded in the Tauri window.
+
+## Build Mode
+
+When you build your project:
 
 ```bash
-#/-------------------[DOTENV_PUBLIC_KEY]--------------------/
-#/            public-key encryption for .env files          /
-#/       [how it works](https://dotenvx.com/encryption)     /
-#/----------------------------------------------------------/
-DOTENV_PUBLIC_KEY="03a1..."
-# .env
-API_KEY="encrypted:BDqDBibm4wsYqMpCjTQ6BsDHmMadg9K3dAt+Z9HPMfLEIRVz50hmLXPXRuDBXaJi..."
+npm run build
 ```
 
-### Environment-Specific .env Files
+The plugin:
 
-You can create environment-specific .env files like `.env.production` or `.env.staging`:
+1. Builds your Vite application
+2. Configures Tauri to use your Vite output directory
+3. Triggers the Tauri build process
+
+This results in a binary that includes your Vite application bundled with Tauri.
+
+## CLI Arguments
+
+You can pass arguments to the Tauri CLI by adding them after a double dash (`--`) and the `-t` or `--tauri` flag:
 
 ```bash
-# Create environment-specific .env files
-echo "API_KEY=production_key" > .env.production
-echo "API_KEY=staging_key" > .env.staging
+# Development mode with debug enabled
+npm run dev -- -t --debug
 
-# Encrypt them
-dotenvx encrypt -f .env.production
-dotenvx encrypt -f .env.staging
+# Build for a specific target
+npm run build -- -t --target nsis
+
+# Using other Tauri CLI arguments
+npm run build -- -t --target universal-apple-darwin --debug
 ```
 
-To use these files, specify them in your Vite config:
+This allows you to use all of Tauri's CLI options directly from your Vite scripts.
 
-```ts
-Dotenvx({
-  path: ['.env', '.env.production'],
-  // ...other options
-})
+## Environment Variables
+
+- `TAURI_PATH_DEPTH`: Controls how deep the plugin searches for Tauri configuration files. Default is `3`.
+
+## Configuration File
+
+The plugin automatically searches for Tauri configuration files in your project. It looks for:
+
+- `tauri.conf.json`
+- `tauri.conf.json5`
+- `Tauri.toml`
+
+The search starts in your project root and can go as deep as specified by the `TAURI_PATH_DEPTH` environment variable.
+
+## Working with Tauri
+
+### Tauri Configuration
+
+For detailed configuration of your Tauri application, you'll need to modify your Tauri configuration file (`tauri.conf.json` or equivalent). See the [Tauri configuration guide](https://tauri.app/v1/api/config/) for more information.
+
+### Using Tauri APIs
+
+To use Tauri APIs in your application, you'll need to install the Tauri client package:
+
+```bash
+npm install @tauri-apps/api
 ```
 
-### Using Multiple .env Files
+Then you can import and use the APIs in your application:
 
-You can load multiple .env files in order of priority:
+```js
+import { invoke } from '@tauri-apps/api/tauri'
 
-```ts
-Dotenvx({
-  path: ['.env.local', '.env'],
-  // ...other options
-})
+// Call a command defined in Rust
+invoke('greet', { name: 'World' })
+  .then(response => console.log(response))
 ```
 
-By default, variables from the first file take precedence. If you want later files to override earlier ones, set `overload: true`.
-
-### Using Next.js Convention
-
-If you're familiar with Next.js' .env file convention, you can use it with:
-
-```ts
-Dotenvx({
-  convention: 'nextjs',
-  // ...other options
-})
-```
-
-This will load files in the following order:
-
-1. `.env.development.local`
-2. `.env.local`
-3. `.env.development`
-4. `.env`
-
-### Exposing Environment Variables to the Client
-
-By default, environment variables are only available on the server. To expose specific variables to the client:
-
-```ts
-Dotenvx({
-  exposeToClient: ['VITE_.*', 'PUBLIC_.*'],
-  // ...other options
-})
-```
-
-This will make any environment variables that match the patterns available in your client-side code via `import.meta.env`.
-
-### Auto-generating .env.example
-
-You can automatically generate a `.env.example` file from your loaded environment variables:
-
-```ts
-Dotenvx({
-  generateExample: true,
-  // ...other options
-})
-```
-
-This will create a `.env.example` file with all the keys from your .env files but with empty values.
-
-### Auto-updating .gitignore
-
-You can automatically add `.env.keys` to your `.gitignore` file:
-
-```ts
-Dotenvx({
-  updateGitignore: true,
-  // ...other options
-})
-```
-
-This ensures that your private keys are never committed to your repository.
-
-## Security Best Practices
-
-1. **Add `.env.keys` to your `.gitignore`** - Never commit your private keys to your repository
-2. **Commit encrypted .env files** - It's safe to commit encrypted .env files to your repository
-3. **Use environment-specific keys** - Use different keys for different environments
-4. **Rotate keys periodically** - Use `dotenvx rotate` to rotate your encryption keys
-5. **Use strict mode in production** - Enable strict mode to ensure all required variables are available
-
-For more information on dotenvx, visit [dotenvx.com](https://dotenvx.com).
+For more information on using Tauri APIs, see the [Tauri API documentation](https://tauri.app/v1/api/js/).
