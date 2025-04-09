@@ -1,478 +1,278 @@
 /* eslint-disable no-console */
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import * as fs from 'node:fs'
-import { VitePluginDotenvx } from '../src/index'
+import tauriPlugin from '../src/index'
 
-// Define types for mocks
-interface DotenvxResult {
-  parsed: Record<string, string> | null
-  error?: Error
+// Define the return type for mockTauriCli.run
+interface TauriRunResult {
+  stdout: string
+  stderr: string
+  exitCode: number
 }
 
-// Define type for dotenvx options
-interface DotenvxOptions {
-  path?: string[]
-  envKeysFile?: string
-  convention?: string
-  ignore?: string[]
-  overload?: boolean
-  strict?: boolean
+// Mock modules
+const mockTauriCli = {
+  run: mock<(args: string[], name?: string) => Promise<TauriRunResult>>(() =>
+    Promise.resolve({ stdout: '', stderr: '', exitCode: 0 })),
 }
 
-// Define type for ConfigEnv
-interface ConfigEnv {
-  command: 'serve' | 'build'
-  mode: string
-}
-
-// Helper function to call configResolved hook safely
-function callConfigResolved(plugin: any, config: any = {}) {
-  if (plugin.configResolved && typeof plugin.configResolved === 'object' && 'handler' in plugin.configResolved) {
-    plugin.configResolved.handler(config)
-  }
-  else if (typeof plugin.configResolved === 'function') {
-    plugin.configResolved(config)
-  }
-}
-
-// Helper function to call config hook safely
-function callConfig(plugin: any, config: any = {}, env: ConfigEnv = { command: 'serve', mode: 'development' }) {
-  if (plugin.config && typeof plugin.config === 'object' && 'handler' in plugin.config) {
-    plugin.config.handler(config, env)
-  }
-  else if (typeof plugin.config === 'function') {
-    plugin.config(config, env)
-  }
-}
-
-// Mock dotenvx
-const mockDotenvx = {
-  config: mock<(options?: DotenvxOptions) => DotenvxResult>(() => ({
-    parsed: { TEST_VAR: 'test_value', ANOTHER_VAR: 'another_value' },
-  })),
-}
-
-mock.module('@dotenvx/dotenvx', () => ({
-  default: mockDotenvx,
+mock.module('@tauri-apps/cli', () => ({
+  default: mockTauriCli,
 }))
 
-// Mock fs module
+const mockFastGlob = {
+  sync: mock<(pattern: string, options?: any) => string[]>(() => ['/path/to/tauri.conf.json']),
+}
+
+mock.module('fast-glob', () => ({
+  default: mockFastGlob,
+}))
+
+const mockLocalPkg = {
+  getPackageInfoSync: mock<(packageName: string) => { version: string } | undefined>(() =>
+    ({ version: '2.0.0' })),
+}
+
+mock.module('local-pkg', () => ({
+  getPackageInfoSync: mockLocalPkg.getPackageInfoSync,
+}))
+
+const mockUtils = {
+  confirm: mock<(msg: string) => Promise<boolean>>(() => Promise.resolve(true)),
+  getPackageJson: mock<() => { name: string }>(() => ({ name: 'test-app' })),
+}
+
+mock.module('../src/utils', () => ({
+  confirm: mockUtils.confirm,
+  getPackageJson: mockUtils.getPackageJson,
+}))
+
+// Mock console
+const originalConsole = { ...console }
+const mockConsole = {
+  log: mock<(...args: any[]) => void>(() => {}),
+  error: mock<(...args: any[]) => void>(() => {}),
+}
+
+// Mock process
+const originalProcess = { ...process }
+const mockExit = mock<(code?: number) => never>(() => {
+  throw new Error('process.exit called')
+})
+
+// Mock fs
 const mockFs = {
-  existsSync: mock(() => true),
-  readFileSync: mock(() => ''),
-  writeFileSync: mock<(path: string | URL, content: string) => void>(() => {}),
+  existsSync: mock<(path: string) => boolean>(() => true),
+  readFileSync: mock<(path: string, encoding: string) => string>(() => '{}'),
 }
 
 mock.module('node:fs', () => ({
   ...fs,
   existsSync: mockFs.existsSync,
   readFileSync: mockFs.readFileSync,
-  writeFileSync: mockFs.writeFileSync,
 }))
 
-// Mock console
-const originalConsole = { ...console }
-const mockConsole = {
-  log: mock(() => {}),
-  error: mock(() => {}),
-}
-
-describe('vite-plugin-dotenvx', () => {
+describe('vite-plugin-tauri', () => {
   beforeEach(() => {
     // Reset mocks
-    mockFs.existsSync.mockReset()
-    mockFs.readFileSync.mockReset()
-    mockFs.writeFileSync.mockReset()
+    mockTauriCli.run.mockReset()
+    mockTauriCli.run.mockImplementation(() => Promise.resolve({ stdout: '', stderr: '', exitCode: 0 }))
+
+    mockFastGlob.sync.mockReset()
+    mockFastGlob.sync.mockImplementation(() => ['/path/to/tauri.conf.json'])
+
+    mockLocalPkg.getPackageInfoSync.mockReset()
+    mockLocalPkg.getPackageInfoSync.mockImplementation(() => ({ version: '2.0.0' }))
+
+    mockUtils.confirm.mockReset()
+    mockUtils.confirm.mockImplementation(() => Promise.resolve(true))
+
+    mockUtils.getPackageJson.mockReset()
+    mockUtils.getPackageJson.mockImplementation(() => ({ name: 'test-app' }))
+
     mockConsole.log.mockReset()
     mockConsole.error.mockReset()
-    mockDotenvx.config.mockReset()
 
-    // Default implementation
-    mockDotenvx.config.mockImplementation(() => ({
-      parsed: { TEST_VAR: 'test_value', ANOTHER_VAR: 'another_value' },
-    }))
+    // Mock process.exit
+    process.exit = mockExit as any
 
     // Mock console
-    console.log = mockConsole.log as typeof console.log
-    console.error = mockConsole.error as typeof console.error
+    console.log = mockConsole.log
+    console.error = mockConsole.error
   })
 
   afterEach(() => {
     // Restore console
-    console.log = originalConsole.log as typeof console.log
-    console.error = originalConsole.error as typeof console.error
+    console.log = originalConsole.log
+    console.error = originalConsole.error
+
+    // Restore process
+    process.exit = originalProcess.exit
   })
 
   it('should create a plugin with default options', () => {
-    const plugin = VitePluginDotenvx({})
+    const plugin = tauriPlugin()
 
     expect(plugin).toBeDefined()
-    expect(plugin.name).toBe('vite-plugin-dotenvx')
-    expect(plugin.enforce).toBe('pre')
+    expect(Array.isArray(plugin)).toBe(true)
+
+    const pluginArray = plugin as any[]
+    expect(pluginArray.length).toBe(2)
+    expect(pluginArray[0].name).toBe('vite-plugin-tauri:serve')
+    expect(pluginArray[1].name).toBe('vite-plugin-tauri:build')
   })
 
-  it('should apply in serve mode by default', () => {
-    const plugin = VitePluginDotenvx({})
+  it('should include a configureServer hook in the serve plugin', () => {
+    const plugin = tauriPlugin()
+    const pluginArray = plugin as any[]
 
-    // Test apply function
-    // @ts-expect-error - Testing apply function with spread operator
-    const applyServe = plugin.apply(...[undefined, { command: 'serve' }])
-    expect(applyServe).toBe(true)
-
-    // @ts-expect-error - Testing apply function with spread operator
-    const applyBuild = plugin.apply(...[undefined, { command: 'build' }])
-    expect(applyBuild).toBe(false)
+    expect(typeof pluginArray[0].configureServer).toBe('function')
   })
 
-  it('should apply in build mode when applyInBuild is true', () => {
-    const plugin = VitePluginDotenvx({ applyInBuild: true })
+  it('should include a closeBundle hook in the build plugin', () => {
+    const plugin = tauriPlugin()
+    const pluginArray = plugin as any[]
 
-    // Test apply function
-    // @ts-expect-error - Testing apply function with spread operator
-    const applyServe = plugin.apply(...[undefined, { command: 'serve' }])
-    expect(applyServe).toBe(true)
-
-    // @ts-expect-error - Testing apply function with spread operator
-    const applyBuild = plugin.apply(...[undefined, { command: 'build' }])
-    expect(applyBuild).toBe(true)
+    expect(typeof pluginArray[1].closeBundle).toBe('function')
   })
 
-  it('should load environment variables in configResolved hook', () => {
-    const plugin = VitePluginDotenvx({ verbose: true })
+  it('should check for Tauri configuration during initialization', async () => {
+    // Reset the mock first to ensure it's clean for this test
+    mockFastGlob.sync.mockClear()
 
-    // Call configResolved hook
-    callConfigResolved(plugin)
+    // Ensure the mock returns something when called
+    mockFastGlob.sync.mockReturnValue(['/path/to/tauri.conf.json'])
 
-    // Expect console.log to be called with debug message
-    expect(mockConsole.log.mock.calls.length).toBeGreaterThan(0)
+    // Create a plugin instance which should trigger fast-glob internally
+    const plugin = tauriPlugin()
+
+    // Manually access the internal function to make sure fast-glob is called
+    const pluginArray = plugin as any[]
+    const server = {
+      httpServer: {
+        address: () => ({ address: 'localhost', port: 3000 }),
+        once: (_event: string, _callback: () => void) => {
+          // Don't call the callback
+        },
+      },
+      config: {
+        server: {
+          https: false,
+        },
+      },
+    }
+
+    // This should trigger the internal code that uses fast-glob
+    await pluginArray[0].configureServer(server)
+
+    // Now check if our mock was called
+    expect(mockFastGlob.sync.mock.calls.length).toBeGreaterThan(0)
+
+    // Since we've verified the mock was called, we can safely check the pattern
+    const pattern = mockFastGlob.sync.mock.calls[0][0]
+    expect(pattern).toContain('tauri.conf')
   })
 
-  it('should not load environment variables when enabled is false', () => {
-    const plugin = VitePluginDotenvx({ enabled: false })
+  it('should use tauri cli with proper arguments', async () => {
+    // Set up mock to handle arguments properly
+    mockTauriCli.run.mockImplementation((_args: string[], _name?: string) => {
+      return Promise.resolve({ stdout: '', stderr: '', exitCode: 0 })
+    })
 
-    // Call configResolved hook
-    callConfigResolved(plugin)
+    // Set up a test environment to trigger the plugin behavior
+    const plugin = tauriPlugin()
+    const pluginArray = plugin as any[]
 
-    // Expect console.log not to be called
-    expect(mockConsole.log.mock.calls.length).toBe(0)
+    // Manually invoke the closeBundle hook to test build functionality
+    if (pluginArray[1].closeBundle) {
+      // Mock the resolved config
+      pluginArray[1].configResolved({ build: { outDir: 'dist' } })
+
+      // Call the hook
+      await pluginArray[1].closeBundle()
+
+      // Verify TauriCli.run was called
+      expect(mockTauriCli.run.mock.calls.length).toBeGreaterThan(0)
+
+      // Check that the arguments include build
+      const args = mockTauriCli.run.mock.calls[0][0]
+      expect(args).toContain('build')
+    }
   })
 
-  it('should expose environment variables to client when exposeToClient is set', () => {
-    const plugin = VitePluginDotenvx({
-      exposeToClient: ['TEST_.*'],
+  it('should initialize Tauri if configuration is not found', async () => {
+    // Set up mock to return null (no configuration found)
+    mockFastGlob.sync.mockImplementation(() => [])
+
+    // Set up mock to handle arguments properly
+    mockTauriCli.run.mockImplementation((_args: string[], _name?: string) => {
+      return Promise.resolve({ stdout: '', stderr: '', exitCode: 0 })
     })
 
-    // Call configResolved hook to load env vars
-    callConfigResolved(plugin)
+    const plugin = tauriPlugin()
+    const pluginArray = plugin as any[]
 
-    // Create a mock config object
-    const config: { define?: Record<string, string> } = {}
+    // Create a mock server object to pass to configureServer
+    const mockServer = {
+      httpServer: {
+        address: () => ({ address: 'localhost', port: 3000 }),
+        once: (_event: string, _callback: () => void) => {
+          // Don't actually call the callback here
+        },
+      },
+      config: {
+        server: {
+          https: false,
+        },
+      },
+    }
 
-    // Call config hook
-    callConfig(plugin, config)
+    // Call the configureServer hook
+    await pluginArray[0].configureServer(mockServer)
 
-    // Expect config.define to be set with the exposed env var
-    expect(config.define).toBeDefined()
-    expect(config.define?.['import.meta.env.TEST_VAR']).toBe('"test_value"')
+    // Should have tried to confirm initializing Tauri
+    expect(mockUtils.confirm.mock.calls.length).toBeGreaterThan(0)
+
+    // Should have called TauriCli.run with init
+    expect(mockTauriCli.run.mock.calls.length).toBeGreaterThan(0)
+
+    const args = mockTauriCli.run.mock.calls[0][0]
+    expect(args.includes('init')).toBe(true)
   })
 
-  it('should generate .env.example file when generateExample is true', () => {
-    // Setup mock
-    mockFs.writeFileSync.mockImplementation((filePath: string | URL, content: string) => {
-      expect(filePath.toString()).toContain('.env.example')
-      expect(content).toContain('TEST_VAR=""')
-      expect(content).toContain('ANOTHER_VAR=""')
+  it('should parse Tauri CLI arguments from process.argv', async () => {
+    // Save original argv
+    const originalArgv = [...process.argv]
+
+    // Set up mock to handle arguments properly
+    mockTauriCli.run.mockImplementation((_args: string[], _name?: string) => {
+      return Promise.resolve({ stdout: '', stderr: '', exitCode: 0 })
     })
 
-    const plugin = VitePluginDotenvx({
-      generateExample: true,
-      verbose: true,
-    })
+    try {
+      // Set up process.argv with Tauri arguments
+      process.argv = [...process.argv, '--', '-t', '--debug', '--target', 'apple-silicon']
 
-    // Call configResolved hook
-    callConfigResolved(plugin)
+      const plugin = tauriPlugin()
+      const pluginArray = plugin as any[]
 
-    // Expect writeFileSync to be called
-    expect(mockFs.writeFileSync.mock.calls.length).toBe(1)
+      // Invoke the configResolved hook to set viteConfig
+      pluginArray[1].configResolved({ build: { outDir: 'dist' } })
 
-    // Expect debug message to be logged
-    const logCalls = mockConsole.log.mock.calls
-    const generatedLogFound = logCalls.some(call =>
-      call.some((arg: unknown) => typeof arg === 'string' && arg.includes('Generated .env.example')),
-    )
-    expect(generatedLogFound).toBe(true)
-  })
+      // Call the closeBundle hook
+      await pluginArray[1].closeBundle()
 
-  it('should update .gitignore when updateGitignore is true', () => {
-    // Setup mocks
-    mockFs.existsSync.mockReturnValue(true)
-    mockFs.readFileSync.mockReturnValue('# Some existing content')
-    mockFs.writeFileSync.mockImplementation((filePath: string | URL, content: string) => {
-      expect(filePath.toString()).toContain('.gitignore')
-      expect(content).toContain('# dotenvx')
-      expect(content).toContain('.env.keys')
-    })
+      // Verify arguments were passed through
+      expect(mockTauriCli.run.mock.calls.length).toBeGreaterThan(0)
 
-    const plugin = VitePluginDotenvx({
-      updateGitignore: true,
-      verbose: true,
-    })
-
-    // Call configResolved hook
-    callConfigResolved(plugin)
-
-    // Expect writeFileSync to be called
-    expect(mockFs.writeFileSync.mock.calls.length).toBe(1)
-
-    // Expect debug message to be logged
-    const logCalls = mockConsole.log.mock.calls
-    const gitignoreLogFound = logCalls.some(call =>
-      call.some((arg: unknown) => typeof arg === 'string' && arg.includes('Added .env.keys to .gitignore')),
-    )
-    expect(gitignoreLogFound).toBe(true)
-  })
-
-  it('should not update .gitignore if .env.keys is already included', () => {
-    // Setup mocks
-    mockFs.existsSync.mockReturnValue(true)
-    mockFs.readFileSync.mockReturnValue('# Some existing content\n.env.keys')
-
-    const plugin = VitePluginDotenvx({
-      updateGitignore: true,
-      verbose: true,
-    })
-
-    // Call configResolved hook
-    callConfigResolved(plugin)
-
-    // Expect writeFileSync not to be called
-    expect(mockFs.writeFileSync.mock.calls.length).toBe(0)
-
-    // Expect debug message to be logged
-    const logCalls = mockConsole.log.mock.calls
-    const gitignoreLogFound = logCalls.some(call =>
-      call.some((arg: unknown) => typeof arg === 'string' && arg.includes('already in .gitignore')),
-    )
-    expect(gitignoreLogFound).toBe(true)
-  })
-
-  it('should handle dotenvx errors gracefully when strict is false', () => {
-    // Setup mock to return an error
-    mockDotenvx.config.mockImplementation(() => ({
-      error: new Error('Test error'),
-      parsed: null,
-    }))
-
-    const plugin = VitePluginDotenvx({
-      verbose: true,
-      strict: false,
-    })
-
-    // This should not throw
-    expect(() => callConfigResolved(plugin)).not.toThrow()
-
-    // Expect error to be logged
-    expect(mockConsole.error.mock.calls.length).toBe(1)
-
-    // Check if any call contains the error message
-    const errorCalls = mockConsole.error.mock.calls
-    const errorFound = errorCalls.some(call =>
-      call.some((arg: unknown) => typeof arg === 'string' && arg.includes('Error loading .env files')),
-    )
-    expect(errorFound).toBe(true)
-  })
-
-  it('should throw dotenvx errors when strict is true', () => {
-    // Setup mock to return an error
-    mockDotenvx.config.mockImplementation(() => ({
-      error: new Error('Test error'),
-      parsed: null,
-    }))
-
-    const plugin = VitePluginDotenvx({
-      verbose: true,
-      strict: true,
-    })
-
-    // This should throw
-    expect(() => callConfigResolved(plugin)).toThrow()
-  })
-
-  it('should handle fs errors gracefully when generating .env.example', () => {
-    // Setup mock to throw an error
-    mockFs.writeFileSync.mockImplementation(() => {
-      throw new Error('Test error')
-    })
-
-    const plugin = VitePluginDotenvx({
-      generateExample: true,
-    })
-
-    // This should not throw
-    expect(() => callConfigResolved(plugin)).not.toThrow()
-
-    // Expect error to be logged
-    expect(mockConsole.error.mock.calls.length).toBe(1)
-
-    // Check if any call contains the error message
-    const errorCalls = mockConsole.error.mock.calls
-    const errorFound = errorCalls.some(call =>
-      call.some((arg: unknown) => typeof arg === 'string' && arg.includes('Error generating .env.example')),
-    )
-    expect(errorFound).toBe(true)
-  })
-
-  it('should handle fs errors gracefully when updating .gitignore', () => {
-    // Setup mock to throw an error
-    mockFs.writeFileSync.mockImplementation(() => {
-      throw new Error('Test error')
-    })
-
-    const plugin = VitePluginDotenvx({
-      updateGitignore: true,
-    })
-
-    // This should not throw
-    expect(() => callConfigResolved(plugin)).not.toThrow()
-
-    // Expect error to be logged
-    expect(mockConsole.error.mock.calls.length).toBe(1)
-
-    // Check if any call contains the error message
-    const errorCalls = mockConsole.error.mock.calls
-    const errorFound = errorCalls.some(call =>
-      call.some((arg: unknown) => typeof arg === 'string' && arg.includes('Error updating .gitignore')),
-    )
-    expect(errorFound).toBe(true)
-  })
-
-  it('should handle custom path option correctly', () => {
-    const plugin = VitePluginDotenvx({
-      path: ['.env.test', '.env.local'],
-    })
-
-    // Call configResolved hook
-    callConfigResolved(plugin)
-
-    // Verify dotenvx.config was called with correct options
-    expect(mockDotenvx.config.mock.calls.length).toBe(1)
-
-    // Safe access to mock calls
-    const mockCall = mockDotenvx.config.mock.calls[0] as unknown[]
-    const mockOptions = mockCall?.[0] as DotenvxOptions | undefined
-    expect(mockOptions).toBeDefined()
-    expect(mockOptions?.path).toEqual(['.env.test', '.env.local'])
-  })
-
-  it('should handle string path option correctly', () => {
-    const plugin = VitePluginDotenvx({
-      path: '.env.test',
-    })
-
-    // Call configResolved hook
-    callConfigResolved(plugin)
-
-    // Verify dotenvx.config was called with correct options
-    expect(mockDotenvx.config.mock.calls.length).toBe(1)
-
-    // Safe access to mock calls
-    const mockCall = mockDotenvx.config.mock.calls[0] as unknown[]
-    const mockOptions = mockCall?.[0] as DotenvxOptions | undefined
-    expect(mockOptions).toBeDefined()
-    expect(mockOptions?.path).toEqual(['.env.test'])
-  })
-
-  it('should handle envKeysFile option correctly', () => {
-    const plugin = VitePluginDotenvx({
-      envKeysFile: 'custom.env.keys',
-    })
-
-    // Call configResolved hook
-    callConfigResolved(plugin)
-
-    // Verify dotenvx.config was called with correct options
-    expect(mockDotenvx.config.mock.calls.length).toBe(1)
-
-    // Safe access to mock calls
-    const mockCall = mockDotenvx.config.mock.calls[0] as unknown[]
-    const mockOptions = mockCall?.[0] as DotenvxOptions | undefined
-    expect(mockOptions).toBeDefined()
-    expect(mockOptions?.envKeysFile).toBe('custom.env.keys')
-  })
-
-  it('should handle convention option correctly', () => {
-    const plugin = VitePluginDotenvx({
-      convention: 'nextjs',
-    })
-
-    // Call configResolved hook
-    callConfigResolved(plugin)
-
-    // Verify dotenvx.config was called with correct options
-    expect(mockDotenvx.config.mock.calls.length).toBe(1)
-
-    // Safe access to mock calls
-    const mockCall = mockDotenvx.config.mock.calls[0] as unknown[]
-    const mockOptions = mockCall?.[0] as DotenvxOptions | undefined
-    expect(mockOptions).toBeDefined()
-    expect(mockOptions?.convention).toBe('nextjs')
-  })
-
-  it('should handle ignore option correctly', () => {
-    const plugin = VitePluginDotenvx({
-      ignore: ['SOME_ERROR'],
-    })
-
-    // Call configResolved hook
-    callConfigResolved(plugin)
-
-    // Verify dotenvx.config was called with correct options
-    expect(mockDotenvx.config.mock.calls.length).toBe(1)
-
-    // Safe access to mock calls
-    const mockCall = mockDotenvx.config.mock.calls[0] as unknown[]
-    const mockOptions = mockCall?.[0] as DotenvxOptions | undefined
-    expect(mockOptions).toBeDefined()
-    expect(mockOptions?.ignore).toEqual(['SOME_ERROR'])
-  })
-
-  it('should not expose environment variables to client when exposeToClient is empty', () => {
-    const plugin = VitePluginDotenvx({
-      exposeToClient: [],
-    })
-
-    // Call configResolved hook to load env vars
-    callConfigResolved(plugin)
-
-    // Create a mock config object
-    const config: { define?: Record<string, string> } = {}
-
-    // Call config hook
-    callConfig(plugin, config)
-
-    expect(config.define).toBeUndefined()
-  })
-
-  it('should not modify config when no env vars are loaded', () => {
-    // Setup mock to return empty parsed result
-    mockDotenvx.config.mockImplementation(() => ({
-      parsed: {},
-    }))
-
-    const plugin = VitePluginDotenvx({
-      exposeToClient: ['TEST_.*'],
-    })
-
-    // Call configResolved hook to load env vars
-    callConfigResolved(plugin)
-
-    // Create a mock config object
-    const config: { define?: Record<string, string> } = {}
-
-    // Call config hook
-    callConfig(plugin, config)
-
-    // Expect config.define to be undefined
-    expect(config.define).toBeUndefined()
+      const args = mockTauriCli.run.mock.calls[0][0]
+      expect(args.includes('--debug')).toBe(true)
+      expect(args.includes('--target')).toBe(true)
+      expect(args.includes('apple-silicon')).toBe(true)
+    }
+    finally {
+      // Restore original argv
+      process.argv = originalArgv
+    }
   })
 })
