@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import * as fs from 'node:fs'
-import tauriPlugin from '../src/index'
+import tauriPlugin from '../packages/vite-plugin-tauri/src/index'
 
 // Define the return type for mockTauriCli.run
 interface TauriRunResult {

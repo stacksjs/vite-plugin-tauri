@@ -1,4 +1,7 @@
-import { app, menu, tray, window } from '@tauri-apps/api'
+import { createMenu } from '@stacksjs/vite-plugin-tauri'
+import { app, window } from '@tauri-apps/api'
+import { TrayIcon } from '@tauri-apps/api/tray'
+// import { Menu } from '@tauri-apps/api/menu'
 
 /**
  * Initialize the system tray icon and menu
@@ -10,56 +13,36 @@ export async function initTray() {
 
     const appWindow = window.getCurrentWindow()
 
-    // Create a simple menu for the tray
-    const menuObj = await menu.Menu.new({
-      items: [
-        {
-          id: 'show',
-          text: 'Show Window',
-          action: async () => {
-            // eslint-disable-next-line no-console
-            console.log('Show window clicked')
-            await appWindow.show()
-            await appWindow.setFocus()
-          },
-        },
-        {
-          id: 'hide',
-          text: 'Hide Window',
-          action: async () => {
-            // eslint-disable-next-line no-console
-            console.log('Hide window clicked')
-            await appWindow.hide()
-          },
-        },
-        {
-          type: 'separator',
-        },
-        {
-          id: 'quit',
-          text: 'Quit',
-          action: () => {
-            // eslint-disable-next-line no-console
-            console.log('Quit clicked')
-            app.exit(0)
-          },
-        },
-      ],
+    // Create a simple menu for the tray with basic structure
+    const menu = createMenu(appWindow)
+
+    // Listen for menu item clicks
+    await menu.onMenuItemClick((item) => {
+      // eslint-disable-next-line no-console
+      console.log(`Menu item clicked: ${item.id}`)
+
+      if (item.id === 'show') {
+        appWindow.show()
+        appWindow.setFocus()
+      }
+      else if (item.id === 'hide') {
+        appWindow.hide()
+      }
+      else if (item.id === 'quit') {
+        app.exit()
+      }
     })
 
-    // Create the tray icon
-    const trayIcon = await tray.TrayIcon.new({
-      menu: menuObj,
+    // Create the tray icon with minimal options
+    const trayIcon = await TrayIcon.new({
+      id: 'main-tray',
+      menu,
       tooltip: 'Tauri Example App',
-      showMenuOnLeftClick: true,
-      action: (event) => {
-        // eslint-disable-next-line no-console
-        console.log('Tray event:', event.type)
-      },
+      iconAsTemplate: true,
     })
 
     // eslint-disable-next-line no-console
-    console.log('System tray initialized successfully')
+    console.log('System tray initialized with ID:', trayIcon.id)
 
     // Setup window close handler to minimize to tray instead of quitting
     appWindow.onCloseRequested(async (event) => {

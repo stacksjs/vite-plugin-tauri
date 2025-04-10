@@ -1,3 +1,5 @@
+import type { MenuOptions } from '@tauri-apps/api/menu'
+
 /**
  * Interface for the Tauri plugin configuration.
  *
@@ -13,6 +15,11 @@ export interface TauriConfig {
      * @default false
      */
     enabled?: boolean
+
+    /**
+     * Menu options
+     */
+    menu?: MenuOptions
 
     /**
      * Enable menu on left click
@@ -33,3 +40,5 @@ export interface TauriConfig {
    */
   [key: string]: unknown
 }
+
+export type { MenuOptions }

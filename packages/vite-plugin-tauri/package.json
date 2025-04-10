@@ -1,8 +1,7 @@
 {
-  "name": "vite-plugin-tauri",
+  "name": "@stacksjs/vite-plugin-tauri",
   "type": "module",
   "version": "0.1.0",
-  "private": true,
   "description": "A Vite plugin to seamlessly integrate with Tauri.",
   "author": "Chris Breuer <chris@stacksjs.org>",
   "license": "MIT",
@@ -40,41 +39,25 @@
   "types": "./dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
-    "build": "bun --bun build.ts",
+    "build": "bun --bun ../../build.ts",
     "lint": "bunx --bun eslint .",
     "lint:fix": "bunx --bun eslint . --fix",
-    "fresh": "bunx rimraf node_modules/ bun.lock && bun i",
     "changelog": "bunx changelogen --output CHANGELOG.md",
-    "prepublishOnly": "bun --bun run build",
-    "release": "bun run changelog && bunx bumpp package.json --all",
     "test": "bun test",
-    "typecheck": "bun --bun tsc --noEmit",
-    "dev:docs": "bun --bun vitepress dev docs",
-    "build:docs": "bun --bun vitepress build docs",
-    "preview:docs": "bun --bun vitepress preview docs"
+    "typecheck": "bun --bun tsc --noEmit"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.4.1",
+    "@tauri-apps/cli": "^2.4.1"
   },
   "devDependencies": {
-    "@stacksjs/docs": "^0.70.23",
-    "@stacksjs/eslint-config": "^4.10.2-beta.3",
-    "@types/bun": "^1.2.9",
-    "bumpp": "^10.1.0",
-    "bun-plugin-dtsx": "^0.21.9",
-    "changelogen": "^0.6.1",
-    "lint-staged": "^15.5.0",
-    "simple-git-hooks": "^2.12.1",
-    "typescript": "^5.8.3"
-  },
-  "overrides": {
-    "unconfig": "0.3.10"
+    "typescript": "^5.8.3",
+    "vite": "^6.2.6"
   },
   "simple-git-hooks": {
     "pre-commit": "bunx lint-staged"
   },
   "lint-staged": {
     "*.{js,ts}": "bunx eslint . --fix"
-  },
-  "workspaces": [
-    "example/*",
-    "packages/*"
-  ]
+  }
 }

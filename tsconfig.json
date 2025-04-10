@@ -6,7 +6,9 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
-      "vite-plugin-tauri": ["./src/index.ts"]
+      "@stacksjs/vite-plugin-tauri": [
+        "./packages/vite-plugin-tauri/src/index.ts"
+      ]
     },
     "resolveJsonModule": true,
     "types": ["bun"],
