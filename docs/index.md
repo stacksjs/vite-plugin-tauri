@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "vite-plugin-tauri"
-  text: "Desktop & Mobile Apps"
+  text: "Desktop & Mobile Applications"
   tagline: "Seamless Tauri integration for your Vite projects."
   image: /images/logo-white.png
   actions:
