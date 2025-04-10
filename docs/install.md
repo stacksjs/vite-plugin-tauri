@@ -1,72 +1,73 @@
 # Install
 
-Installing `vite-plugin-tauri` is easy. Simply pull it in via your package manager of choice.
+Installing `vite-plugin-tauri` is easy. Simply pull it in via your package manager of choice, or download the binary directly.
+
+## Package Managers
+
+Choose your package manager of choice:
 
 ::: code-group
 
-```bash [npm]
-npm install --save-dev vite-plugin-tauri
+```sh [npm]
+npm install --save-dev @stacksjs/vite-plugin-tauri
+# npm i -d @stacksjs/vite-plugin-tauri
 
-# or, install via
-# npm i -d vite-plugin-tauri
+# or, install globally via
+npm i -g @stacksjs/vite-plugin-tauri
 ```
 
-```bash [bun]
-bun install --dev vite-plugin-tauri
+```sh [bun]
+bun install --dev @stacksjs/vite-plugin-tauri
+# bun add --dev @stacksjs/vite-plugin-tauri
+# bun i -d @stacksjs/vite-plugin-tauri
 
-# or, install via
-# bun add --dev vite-plugin-tauri
-# bun i -d vite-plugin-tauri
+# or, install globally via
+bun add --global @stacksjs/vite-plugin-tauri
 ```
 
-```bash [pnpm]
-pnpm add --save-dev vite-plugin-tauri
+```sh [pnpm]
+pnpm add --save-dev @stacksjs/vite-plugin-tauri
+# pnpm i -d @stacksjs/vite-plugin-tauri
 
-# or, install via
-# pnpm i -d vite-plugin-tauri
+# or, install globally via
+pnpm add --global @stacksjs/vite-plugin-tauri
 ```
 
-```bash [yarn]
-yarn add --dev vite-plugin-tauri
+```sh [yarn]
+yarn add --dev @stacksjs/vite-plugin-tauri
+# yarn i -d @stacksjs/vite-plugin-tauri
 
-# or, install via
-# yarn i -d vite-plugin-tauri
+# or, install globally via
+yarn global add @stacksjs/vite-plugin-tauri
+```
+
+```sh [brew]
+brew install vite-plugin-tauri # coming soon
+```
+
+```sh [pkgx]
+pkgx vite-plugin-tauri # coming soon
 ```
 
 :::
 
-## Basic Usage
+## Requirements
 
-This minimal usage example shows how to use `vite-plugin-tauri` in your Vite configuration, using the plugin's default settings.
+Before using `vite-plugin-tauri`, make sure you have:
 
-```javascript
-// vite.config.{js,ts}
-import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vite'
-import tauri from 'vite-plugin-tauri'
+1. `rust` (and Cargo) installed and available in your PATH
 
-export default defineConfig({
-  plugins: [
-    vue(), // svelte(), react(), ...
-    tauri(),
-  ],
-})
+### Installing Rust
+
+In case you are not using `pkgx`, you can install Rust using your package manager of choice:
+
+```sh
+# macOS
+brew install rust
+
+# Ubuntu/Debian
+sudo apt install rust
+
+# Windows (using Chocolatey)
+choco install rust
 ```
-
-With this minimal configuration, the plugin will automatically:
-
-1. Initialize Tauri if it doesn't exist in your project yet
-2. Launch Tauri alongside your Vite development server
-3. Configure Tauri to use your Vite output directory when building
-
-For more advanced usage, check out the [usage](/usage) page in our documentation.
-
-## Prerequisites
-
-To use this plugin, you'll need:
-
-1. [Node.js](https://nodejs.org/) (v23 or later) or [Bun](https://bun.sh/) (v1.2 or later)
-2. A Vite project
-3. [Rust](https://github.com/stacksjs/vite-plugin-tauri/blob/b96c1da902fd7a6167adcb0aaaa2a5e84da74cfd/pkgx.yaml) _(and consequent Cargo)_ installed
-
-If you have any issues, free free to reach out on [Discord](https://discord.gg/stacksjs).

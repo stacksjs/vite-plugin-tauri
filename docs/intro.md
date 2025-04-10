@@ -1,57 +1,79 @@
-![Social Card of this repo](https://github.com/stacksjs/vite-plugin-tauri/blob/main/.github/art/cover.jpg?raw=true)
+<p align="center"><img src="https://github.com/stacksjs/vite-plugin-tauri/blob/main/.github/art/cover.jpg?raw=true" alt="Social Card of vite-plugin-tauri"></p>
 
-# Introduction
+# vite-plugin-tauri
 
-`vite-plugin-tauri` is a Vite plugin that seamlessly integrates with Tauri to help you build desktop applications with web technologies.
+A Vite plugin to seamlessly integrate with Tauri for desktop and mobile app development.
 
 ## Features
 
-- **Auto Integration** - Automatically detects and initializes Tauri in your Vite project
-- **Dev Mode** - Launches Tauri alongside your Vite dev server
-- **Build Ready** - Seamlessly configures Tauri build with your Vite output directory
-- **CLI Passthrough** - Pass arguments to Tauri CLI for advanced configuration
-- **Zero Config** - Works out of the box with sensible defaults
-- **Smart Detection** - Automatically detects your Tauri configuration file
-- **Multi-Environment** - Works across different platforms and environments
+- 🔄 **Auto Integration** - Automatically initializes and integrates Tauri with your Vite project
+- 🛠️ **Dev Mode** - Launches Tauri alongside your Vite dev server
+- 📦 **Build Ready** - Configures Tauri build with your Vite output directory
+- 🧰 **CLI Passthrough** - Supports passing Tauri CLI arguments for advanced configurations
+- 🌐 **Multi-Environment** - Works across different platforms with proper configuration
+- 💼 **Zero Config** - Works out of the box with sensible defaults
+- 🧠 **Smart Detection** - Automatically detects your Tauri configuration file
 
-> A Vite plugin to seamlessly integrate with Tauri for desktop application development.
+## Get Started
 
-## What is Tauri?
-
-[Tauri](https://tauri.app/) is a framework for building tiny, blazingly fast binaries for all major desktop platforms. It allows developers to build applications for the major desktop platforms – using web technologies – bundled in a native shell for distribution.
-
-This plugin integrates with Tauri to provide a seamless experience for Vite users, automatically initializing and configuring Tauri development and builds with your Vite project.
-
-## How It Works
-
-1. **Add the plugin to your Vite config** - Import and use the plugin in your Vite configuration
-2. **Start your Vite dev server** - The plugin automatically launches Tauri alongside your Vite app
-3. **Build your application** - When building your app, the plugin configures Tauri to use your Vite output directory
-
-The plugin handles all the complexity of integration, making it easy to develop Tauri desktop applications with Vite.
-
-## Environment Variables
-
-- `TAURI_PATH_DEPTH` - Controls how deep the plugin searches for Tauri configuration files (default: `3`)
-
-## CLI Arguments
-
-You can pass arguments to the Tauri CLI by adding them after a double dash (`--`) and the `-t` or `--tauri` flag:
+It's very simple to get started:
 
 ```bash
-# Development mode
-npm run dev -- -t --debug
+# Install the plugin
+npm install -D @stacksjs/vite-plugin-tauri
 
-# Build mode
-npm run build -- -t --target nsis --debug
+# Add to your Vite config
 ```
 
-## Sponsors
+```ts
+// vite.config.ts
+import Tauri from '@stacksjs/vite-plugin-tauri'
+import { defineConfig } from 'vite'
 
-We would like to extend our thanks to the following sponsors for funding Stacks development. If you are interested in becoming a sponsor, please reach out to us.
+export default defineConfig({
+  plugins: [
+    Tauri()
+  ]
+})
+```
 
-- [JetBrains](https://www.jetbrains.com/)
-- [The Solana Foundation](https://solana.com/)
+That's it! When you run your Vite development server, Tauri will automatically be initialized if not already present, and will launch alongside your Vite app.
+
+## Developer Experience (DX)
+
+This package comes pre-configured with the following:
+
+- [Powerful Build Process](https://github.com/oven-sh/bun) - via Bun
+- [Fully Typed APIs](https://www.typescriptlang.org/) - via TypeScript
+- [Documentation-ready](https://vitepress.dev/) - via VitePress
+- [Be a Good Commitizen](https://www.npmjs.com/package/git-cz) - pre-configured Commitizen & git-cz setup
+- [Built With Testing In Mind](https://bun.sh/docs/cli/test) - pre-configured unit-testing
+- [ESLint](https://eslint.org/) - for code linting
+- [GitHub Actions](https://github.com/features/actions) - runs your CI
+
+## Changelog
+
+Please see our [releases](https://github.com/stacksjs/vite-plugin-tauri/releases) page for more information on what has changed recently.
+
+## Contributing
+
+Please review the [Contributing Guide](https://github.com/stacksjs/contributing) for details.
+
+## Community
+
+For help, discussion about best practices, or any other conversation that would benefit from being searchable:
+
+[Discussions on GitHub](https://github.com/stacksjs/vite-plugin-tauri/discussions)
+
+For casual chit-chat with others using this package:
+
+[Join the Stacks Discord Server](https://discord.gg/stacksjs)
+
+## Postcardware
+
+"Software that is free, but hopes for a postcard." We love receiving postcards from around the world showing where Stacks is being used! We showcase them on our website too.
+
+Our address: Stacks.js, 12665 Village Ln #2306, Playa Vista, CA 90094, United States 🌎
 
 ## Credits
 
@@ -64,3 +86,8 @@ We would like to extend our thanks to the following sponsors for funding Stacks 
 The MIT License (MIT). Please see [LICENSE](/license) for more information.
 
 Made with 💙
+
+<!-- Badges -->
+
+<!-- [codecov-src]: https://img.shields.io/codecov/c/gh/stacksjs/rpx/main?style=flat-square
+[codecov-href]: https://codecov.io/gh/stacksjs/rpx -->

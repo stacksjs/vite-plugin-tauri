@@ -81,7 +81,7 @@ npm run build -- -t --debug
 
 ## Usage with Tauri
 
-This plugin works with [Tauri](https://tauri.app/), a framework for building desktop applications with web technologies.
+This plugin works with [Tauri](mdc:https:/tauri.app), a framework for building desktop applications with web technologies.
 
 ### Initializing a Ta
 If you don't have a Tauri project initialized in your directory, the plugin will automatically prompt you to create one when you run your Vite dev server:
@@ -108,21 +108,21 @@ bun test
 
 ## Changelog
 
-Please see our [releases](https://github.cogin-tauri/releases) page for more information on what has changed recently.
+Please see our [releases](mdc:https:/github.cogin-tauri/releases) page for more information on what has changed recently.
 
 ## Contributing
 
-Please review the [Contributing Guide](https://ntributing) for details.
+Please review the [Contributing Guide](mdc:https:/ntributing) for details.
 
 ## Community
 
 For help, discusny other conversation that would benefit from being searchable:
 
-[Discussions on GitHub](https://github.com/stacksjs/stacks/discussions)
+[Discussions on GitHub](mdc:https:/github.com/stacksjs/stacks/discussions)
 
 For casual chit-chat with others using this package:
 
-[Join the Stacks Discord Server](https://discord.gg/stacksjs)
+[Join the Stacks Discord Server](mdc:https:/discord.gg/stacksjs)
 
 ## Postcardware
 
@@ -130,17 +130,17 @@ For casual chit-chat with others using this package:
 
 Our address: Sta665ya Vista, CA 900United States Spoe wext the following sponsors for funding Stacks develIf you are interested in becoming a sponsor, please reach out to us.
 
-- [JetBrains](https://www.jetbrains.com/)
-- [The Solana Foundation](https://solana.com/)
+- [JetBrains](mdc:https:/www.jetbrains.com)
+- [The Solana Foundation](mdc:https:/solana.com)
 
 ## Credits
 
-- [Tauri](https://tauri.app/) for creating a powerful desktop app framework
-- [Chris Breuer](https://github.com/chrisbbreuer)
-- [All Contributors](https://github.com/stacksjs/vite-plugin-tauri/contributors)
+- [Tauri](mdc:https:/tauri.app) for creating a powerful desktop app framework
+- [Chris Breuer](mdc:https:/github.com/chrisbbreuer)
+- [All Contributors](mdc:https:/github.com/stacksjs/vite-plugin-tauri/contributors)
 
 ## License
 
-The MIT License (MIT). Please see [LICENSE](https://github.com/stacksjs/stacks/tree/main/LICENSE.md) for more information.
+The MIT License (MIT). Please see [LICENSE](mdc:https:/github.com/stacksjs/stacks/tree/main/LICENSE.md) for more information.
 
 Made with 💙

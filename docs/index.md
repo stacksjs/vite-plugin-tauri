@@ -4,8 +4,8 @@ layout: home
 
 hero:
   name: "vite-plugin-tauri"
-  text: "Seamless Tauri integration for Vite"
-  tagline: "Automatically integrate Tauri with your project for building desktop & mobile apps"
+  text: "Desktop & Mobile Apps"
+  tagline: "Seamless Tauri integration for your Vite projects."
   image: /images/logo-white.png
   actions:
     - theme: brand
@@ -16,27 +16,24 @@ hero:
       link: https://github.com/stacksjs/vite-plugin-tauri
 
 features:
-  - title: Auto Integration & Initialization
-    icon: 🔄
-    details: "Automatically detects and initializes Tauri in your Vite project with zero config."
-  - title: Development Mode
-    icon: 🛠️
-    details: "Launches Tauri alongside your Vite dev server with proper URL configuration."
-  - title: Build Integration
-    icon: 📦
-    details: "Seamlessly configures Tauri build with your Vite output directory for production builds."
-  - title: CLI Passthrough
-    icon: 🧰
-    details: "Pass arguments to Tauri CLI for advanced configurations and debugging."
-  - title: System Tray Apps
-    icon: 🔔
-    details: "Supports creating system tray applications that run in the notification area of your OS."
-  - title: Mobile Support
-    icon: 📱
-    details: "Build applications for iOS and Android using the same codebase as your desktop app."
-  - title: API Reference
-    icon: 📘
-    details: "Comprehensive API documentation for the plugin, CLI arguments, and environment variables."
+  - title: "Auto Integration"
+    icon: "🔄"
+    details: "Automatically initializes and integrates Tauri with your Vite project."
+  - title: "Development Mode"
+    icon: "🛠️"
+    details: "Launches Tauri alongside your Vite dev server."
+  - title: "Build Ready"
+    icon: "📦"
+    details: "Configures Tauri build with your Vite output directory."
+  - title: "CLI Passthrough"
+    icon: "🧰"
+    details: "Supports passing Tauri CLI arguments for advanced configurations."
+  - title: "Multi-Environment"
+    icon: "🌐"
+    details: "Works across different platforms with proper configuration."
+  - title: "Zero Config"
+    icon: "💼"
+    details: "Works out of the box with sensible defaults."
 ---
 
 <Home />
