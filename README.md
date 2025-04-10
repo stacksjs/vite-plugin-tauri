@@ -19,6 +19,7 @@
 - 🌐 **Multi-Environment** _Works across different platforms with proper configuration_
 - 💼 **Zero Config** _Works out of the box with sensible defaults_
 - 🧠 **Smart Detection** _Automatically detects your Tauri configuration file_
+- 🔍 **System Tray** _Easily add system tray functionality to your desktop applications_
 
 ## Install
 
@@ -60,7 +61,12 @@ import Tauri from 'vite-plugin-tauri'
 export default defineConfig({
   plugins: [
     Tauri({
-      // Configuration options for the plugin (reserved for future use)
+      // System tray configuration
+      systemTray: {
+        enabled: true, // Enable system tray support
+        menuOnLeftClick: true, // Show menu on left click (default: true)
+        useAppIcon: true // Use the app icon as the tray icon (default: true)
+      }
     })
   ]
 })

@@ -97,11 +97,23 @@ function parseTauriArgs(args: string[]): string[] | null {
  * Vite plugin for Tauri integration.
  * Provides seamless integration between Vite and Tauri for development and building.
  *
- * @param _config - Configuration object (currently unused)
+ * @param config - Configuration object for the plugin
  * @returns Vite plugin options
  */
-export function tauri(_config?: TauriConfig): PluginOption {
+export function tauri(config?: TauriConfig): PluginOption {
   let viteConfig: ResolvedConfig
+
+  // Process the system tray configuration
+  const systemTrayEnabled = config?.systemTray?.enabled ?? false
+  // These options are now handled differently in Tauri 2.x
+  // const menuOnLeftClick = config?.systemTray?.menuOnLeftClick ?? true
+  // const useAppIcon = config?.systemTray?.useAppIcon ?? true
+
+  // In Tauri 2.x, tray features are set via the app feature flag, not passed directly
+  // const tauriFeatures = systemTrayEnabled ? ['tray-icon'] : []
+
+  // We'll skip adding the features flag since it's handled in Cargo.toml
+
   return [
     {
       name: 'vite-plugin-tauri:serve',
@@ -144,16 +156,40 @@ export function tauri(_config?: TauriConfig): PluginOption {
             if (!args.includes('dev') && !args.includes('build')) {
               args = ['dev', ...args]
             }
+
+            let tauriConfig: any = {
+              build: {
+                [tauriVersion === 1 ? 'devPath' : 'devUrl']:
+                  `${protocol}://${host}:${port}`,
+              },
+            }
+
+            // Add system tray configuration if enabled
+            if (systemTrayEnabled) {
+              tauriConfig = {
+                ...tauriConfig,
+                app: {
+                  trayIcon: {
+                    iconAsTemplate: true,
+                  },
+                },
+              }
+            }
+
             args = [
               ...args,
               '--config',
-              JSON.stringify({
-                build: {
-                  [tauriVersion === 1 ? 'devPath' : 'devUrl']:
-                    `${protocol}://${host}:${port}`,
-                },
-              }),
+              JSON.stringify(tauriConfig),
             ]
+
+            // Add features if any are specified
+            // if (tauriFeatures.length > 0) {
+            //   args = [
+            //     ...args,
+            //     '--features',
+            //     tauriFeatures.join(','),
+            //   ]
+            // }
 
             TauriCli.run(args, 'vite-plugin-tauri')
           }
@@ -187,18 +223,41 @@ export function tauri(_config?: TauriConfig): PluginOption {
             args = ['build', ...args]
           }
 
+          let tauriConfig: any = {
+            build: {
+              [tauriVersion === 1 ? 'distDir' : 'frontendDist']: path.relative(
+                path.dirname(tauriConfPath),
+                path.resolve(viteConfig.build.outDir),
+              ),
+            },
+          }
+
+          // Add system tray configuration if enabled
+          if (systemTrayEnabled) {
+            tauriConfig = {
+              ...tauriConfig,
+              app: {
+                trayIcon: {
+                  iconAsTemplate: true,
+                },
+              },
+            }
+          }
+
           args = [
             ...args,
             '--config',
-            JSON.stringify({
-              build: {
-                [tauriVersion === 1 ? 'distDir' : 'frontendDist']: path.relative(
-                  path.dirname(tauriConfPath),
-                  path.resolve(viteConfig.build.outDir),
-                ),
-              },
-            }),
+            JSON.stringify(tauriConfig),
           ]
+
+          // Add features if any are specified
+          // if (tauriFeatures.length > 0) {
+          //   args = [
+          //     ...args,
+          //     '--features',
+          //     tauriFeatures.join(','),
+          //   ]
+          // }
 
           await TauriCli.run(args, 'vite-plugin-tauri')
         }

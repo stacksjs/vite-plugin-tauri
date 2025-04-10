@@ -62,6 +62,7 @@ const sidebar = [
       { text: 'Development Mode', link: '/features/dev-mode' },
       { text: 'Build Integration', link: '/features/build-integration' },
       { text: 'CLI Passthrough', link: '/features/cli-passthrough' },
+      { text: 'System Tray', link: '/features/system-tray' },
     ],
   },
   {

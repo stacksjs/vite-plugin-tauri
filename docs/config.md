@@ -15,6 +15,13 @@ export default defineConfig({
   plugins: [
     Tauri({
       // Plugin configuration options (reserved for future use)
+
+      // System tray configuration
+      systemTray: {
+        enabled: true, // Enable system tray support
+        menuOnLeftClick: true, // Show menu on left click (default: true)
+        useAppIcon: true // Use the app icon as the tray icon (default: true)
+      }
     })
   ]
 })
