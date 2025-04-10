@@ -53,6 +53,7 @@
     "preview:docs": "bun --bun vitepress preview docs"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.4.1",
     "@tauri-apps/cli": "^2.4.1"
   },
   "devDependencies": {

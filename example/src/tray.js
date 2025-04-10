@@ -1,7 +1,4 @@
-import { Menu } from '@tauri-apps/api/menu'
-import { exit } from '@tauri-apps/api/process'
-import { TrayIcon } from '@tauri-apps/api/tray'
-import { appWindow } from '@tauri-apps/api/window'
+import { app, menu, tray, window } from '@tauri-apps/api'
 
 /**
  * Initialize the system tray icon and menu
@@ -11,8 +8,10 @@ export async function initTray() {
     // eslint-disable-next-line no-console
     console.log('Initializing system tray...')
 
+    const appWindow = window.getCurrentWindow()
+
     // Create a simple menu for the tray
-    const menu = await Menu.new({
+    const menuObj = await menu.Menu.new({
       items: [
         {
           id: 'show',
@@ -42,15 +41,15 @@ export async function initTray() {
           action: () => {
             // eslint-disable-next-line no-console
             console.log('Quit clicked')
-            exit(0)
+            app.exit(0)
           },
         },
       ],
     })
 
     // Create the tray icon
-    const tray = await TrayIcon.new({
-      menu,
+    const trayIcon = await tray.TrayIcon.new({
+      menu: menuObj,
       tooltip: 'Tauri Example App',
       showMenuOnLeftClick: true,
       action: (event) => {
@@ -70,7 +69,7 @@ export async function initTray() {
       await appWindow.hide()
     })
 
-    return tray
+    return trayIcon
   }
   catch (error) {
     console.error('Failed to initialize system tray:', error)
