@@ -20,10 +20,13 @@ It's very simple to get started:
 
 ```bash
 # Install the plugin
-npm install -D @stacksjs/vite-plugin-tauri
+bun add -D @stacksjs/vite-plugin-tauri
 
-# Add to your Vite config
+# alternatively
+npm install -D @stacksjs/vite-plugin-tauri
 ```
+
+Add the plugin to your Vite config:
 
 ```ts
 // vite.config.ts
@@ -39,17 +42,7 @@ export default defineConfig({
 
 That's it! When you run your Vite development server, Tauri will automatically be initialized if not already present, and will launch alongside your Vite app.
 
-## Developer Experience (DX)
-
-This package comes pre-configured with the following:
-
-- [Powerful Build Process](https://github.com/oven-sh/bun) - via Bun
-- [Fully Typed APIs](https://www.typescriptlang.org/) - via TypeScript
-- [Documentation-ready](https://vitepress.dev/) - via VitePress
-- [Be a Good Commitizen](https://www.npmjs.com/package/git-cz) - pre-configured Commitizen & git-cz setup
-- [Built With Testing In Mind](https://bun.sh/docs/cli/test) - pre-configured unit-testing
-- [ESLint](https://eslint.org/) - for code linting
-- [GitHub Actions](https://github.com/features/actions) - runs your CI
+To learn more, check out the [docs](https://vite-plugin-tauri.netlify.app).
 
 ## Changelog
 
