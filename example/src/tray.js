@@ -1,4 +1,5 @@
-import { app, window } from '@tauri-apps/api'
+import { window } from '@tauri-apps/api'
+import { defaultWindowIcon } from '@tauri-apps/api/app'
 import { Menu } from '@tauri-apps/api/menu'
 import { TrayIcon } from '@tauri-apps/api/tray'
 
@@ -18,45 +19,46 @@ export async function initTray() {
         {
           id: 'show',
           text: 'Show Window',
-          enabled: true,
+          // enabled: true,
         },
         {
           id: 'hide',
           text: 'Hide Window',
-          enabled: true,
+          // enabled: true,
         },
-        {
-          type: 'separator',
-        },
+        // {
+        //   type: 'separator',
+        // },
         {
           id: 'quit',
           text: 'Quit',
-          enabled: true,
+          // enabled: true,
         },
       ],
     })
 
     // Listen for menu item clicks
-    await menu.onMenuItemClick((item) => {
-      // eslint-disable-next-line no-console
-      console.log(`Menu item clicked: ${item.id}`)
+    // await menu.onMenuItemClick((item) => {
+    //   // eslint-disable-next-line no-console
+    //   console.log(`Menu item clicked: ${item.id}`)
 
-      if (item.id === 'show') {
-        appWindow.show()
-        appWindow.setFocus()
-      }
-      else if (item.id === 'hide') {
-        appWindow.hide()
-      }
-      else if (item.id === 'quit') {
-        app.exit()
-      }
-    })
+    //   if (item.id === 'show') {
+    //     appWindow.show()
+    //     appWindow.setFocus()
+    //   }
+    //   else if (item.id === 'hide') {
+    //     appWindow.hide()
+    //   }
+    //   else if (item.id === 'quit') {
+    //     app.exit()
+    //   }
+    // })
 
     // Create the tray icon with minimal options
     const trayIcon = await TrayIcon.new({
       id: 'main-tray',
       menu,
+      icon: await defaultWindowIcon(),
       tooltip: 'Tauri Example App',
       iconAsTemplate: true,
     })
