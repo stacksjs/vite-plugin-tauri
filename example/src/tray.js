@@ -1,7 +1,6 @@
-import { createMenu } from '@stacksjs/vite-plugin-tauri'
 import { app, window } from '@tauri-apps/api'
+import { Menu } from '@tauri-apps/api/menu'
 import { TrayIcon } from '@tauri-apps/api/tray'
-// import { Menu } from '@tauri-apps/api/menu'
 
 /**
  * Initialize the system tray icon and menu
@@ -14,7 +13,28 @@ export async function initTray() {
     const appWindow = window.getCurrentWindow()
 
     // Create a simple menu for the tray with basic structure
-    const menu = createMenu(appWindow)
+    const menu = await Menu.new({
+      items: [
+        {
+          id: 'show',
+          text: 'Show Window',
+          enabled: true,
+        },
+        {
+          id: 'hide',
+          text: 'Hide Window',
+          enabled: true,
+        },
+        {
+          type: 'separator',
+        },
+        {
+          id: 'quit',
+          text: 'Quit',
+          enabled: true,
+        },
+      ],
+    })
 
     // Listen for menu item clicks
     await menu.onMenuItemClick((item) => {
