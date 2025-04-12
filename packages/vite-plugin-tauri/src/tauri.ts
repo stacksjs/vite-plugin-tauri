@@ -169,8 +169,19 @@ export function tauri(config?: TauriConfig): PluginOption {
               tauriConfig = {
                 ...tauriConfig,
                 app: {
-                  trayIcon: {
-                    iconAsTemplate: true,
+                  security: {
+                    capabilities: [
+                      {
+                        identifier: 'systemTray',
+                        description: 'Lets app custom configuration for System tray, and menu options',
+                        windows: ['main'],
+                        permissions: [
+                          'core:tray:default',
+                          'core:menu:default',
+                          'core:app:allow-default-window-icon',
+                        ],
+                      },
+                    ],
                   },
                 },
               }
@@ -237,8 +248,19 @@ export function tauri(config?: TauriConfig): PluginOption {
             tauriConfig = {
               ...tauriConfig,
               app: {
-                trayIcon: {
-                  iconAsTemplate: true,
+                security: {
+                  capabilities: [
+                    {
+                      identifier: 'systemTray',
+                      description: 'Lets app custom configuration for System tray, and menu options',
+                      windows: ['main'],
+                      permissions: [
+                        'core:tray:default',
+                        'core:menu:default',
+                        'core:app:allow-default-window-icon',
+                      ],
+                    },
+                  ],
                 },
               },
             }
