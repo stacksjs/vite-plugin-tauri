@@ -1,4 +1,16 @@
 
+## v0.2.1...main
+
+[compare changes](https://github.com/stacksjs/vite-plugin-tauri/compare/v0.2.1...main)
+
+### 🏡 Chore
+
+- Add `prepublishOnly` to package ([005aaf1](https://github.com/stacksjs/vite-plugin-tauri/commit/005aaf1))
+
+### ❤️ Contributors
+
+- Chris ([@chrisbbreuer](https://github.com/chrisbbreuer))
+
 ## v0.2.0...main
 
 [compare changes](https://github.com/stacksjs/vite-plugin-tauri/compare/v0.2.0...main)
