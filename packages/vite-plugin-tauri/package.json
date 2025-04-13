@@ -28,18 +28,20 @@
   ],
   "exports": {
     ".": {
-      "types": "./../../dist/index.d.ts",
-      "import": "./../../dist/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./*": {
-      "import": "./../../dist/*"
+      "import": "./dist/*"
     }
   },
-  "module": "../../dist/index.js",
-  "types": "../../dist/index.d.ts",
-  "files": ["../../dist"],
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "bun --bun ../../build.ts",
+    "build": "bun --bun ./build.ts",
     "lint": "bunx --bun eslint .",
     "lint:fix": "bunx --bun eslint . --fix",
     "changelog": "bunx changelogen --output CHANGELOG.md",

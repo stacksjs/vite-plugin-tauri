@@ -14,38 +14,14 @@
   "bugs": {
     "url": "https://github.com/stacksjs/vite-plugin-tauri/issues"
   },
-  "keywords": [
-    "typescript",
-    "tauri",
-    "vite",
-    "plugin",
-    "vite-plugin-tauri",
-    "development",
-    "build",
-    "system-tray",
-    "desktop",
-    "mobile",
-    "app"
-  ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./*": {
-      "import": "./dist/*"
-    }
-  },
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": ["dist"],
   "scripts": {
     "build": "bun --bun build.ts",
     "lint": "bunx --bun eslint .",
     "lint:fix": "bunx --bun eslint . --fix",
     "fresh": "bunx rimraf node_modules/ bun.lock && bun i",
     "changelog": "bunx changelogen --output CHANGELOG.md",
-    "prepublishOnly": "bun --bun run build",
+    "publish": "cd packages/vite-plugin-tauri && bun publish",
+    "prepublishOnly": "cd packages/vite-plugin-tauri && bun --bun run build",
     "release": "bun run changelog && bunx bumpp package.json --all",
     "test": "bun test",
     "typecheck": "bun --bun tsc --noEmit",
