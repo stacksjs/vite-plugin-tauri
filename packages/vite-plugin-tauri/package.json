@@ -46,7 +46,8 @@
     "lint:fix": "bunx --bun eslint . --fix",
     "changelog": "bunx changelogen --output CHANGELOG.md",
     "test": "bun test",
-    "typecheck": "bun --bun tsc --noEmit"
+    "typecheck": "bun --bun tsc --noEmit",
+    "prepublishOnly": "bun --bun run build"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.4.1",

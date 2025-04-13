@@ -30,7 +30,7 @@ jobs:
         run: bun install
 
       - name: Publish to npm
-        run: bun publish --access public
+        run: cd packages/vite-plugin-tauri && bun publish --access public
         env:
           BUN_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
