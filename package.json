@@ -22,7 +22,7 @@
     "changelog": "bunx changelogen --output CHANGELOG.md",
     "publish": "cd packages/vite-plugin-tauri && bun publish",
     "prepublishOnly": "cd packages/vite-plugin-tauri && bun --bun run build",
-    "release": "bun run changelog && bunx bumpp package.json --all",
+    "release": "bun run changelog && bunx bumpp package.json ./packages/**/package.json --all",
     "test": "bun test",
     "typecheck": "bun --bun tsc --noEmit",
     "dev:docs": "bun --bun vitepress dev docs",
