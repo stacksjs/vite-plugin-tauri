@@ -1,4 +1,18 @@
 
+## v0.2.0...main
+
+[compare changes](https://github.com/stacksjs/vite-plugin-tauri/compare/v0.2.0...main)
+
+### 🏡 Chore
+
+- Use lock file ([7d77145](https://github.com/stacksjs/vite-plugin-tauri/commit/7d77145))
+- Minor build updates ([6035f78](https://github.com/stacksjs/vite-plugin-tauri/commit/6035f78))
+- Adjust release script ([8ac399c](https://github.com/stacksjs/vite-plugin-tauri/commit/8ac399c))
+
+### ❤️ Contributors
+
+- Chris ([@chrisbbreuer](https://github.com/chrisbbreuer))
+
 ## v0.1.0...main
 
 [compare changes](https://github.com/stacksjs/vite-plugin-tauri/compare/v0.1.0...main)
