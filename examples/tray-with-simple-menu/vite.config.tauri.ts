@@ -1,6 +1,6 @@
 import type { UserConfig } from 'vite'
 import { defineConfig, mergeConfig } from 'vite'
-import { tauri } from '../packages/vite-plugin-tauri/src'
+import { tauri } from '../../packages/vite-plugin-tauri/src'
 import baseViteConfig from './vite.config'
 
 // https://vitejs.dev/config
