@@ -22,7 +22,7 @@ tauri = { version = "2.4.1", features = [
   "image-png",
   "unstable"
 ] }
-tauri-plugin-positioner = { version = "2.0.0", features = [ "tray-icon" ] }
+# tauri-plugin-positioner = { version = "2.0.0", features = [ "tray-icon" ] }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

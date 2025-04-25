@@ -3,7 +3,7 @@ import { defaultWindowIcon } from '@tauri-apps/api/app'
 import { TrayIcon } from '@tauri-apps/api/tray'
 import { Webview } from '@tauri-apps/api/webview'
 import { Window } from '@tauri-apps/api/window'
-// import {moveWindow, handleIconState, Position} from '@tauri-apps/plugin-positioner'
+import { handleIconState } from '@tauri-apps/plugin-positioner'
 
 /**
  * Initialize the system tray icon and menu
@@ -16,7 +16,7 @@ export async function initTray() {
     const trayWindow = createTrayCustomWindow()
 
     const action = async (event) => {
-      // await handleIconState(event)
+      await handleIconState(event)
 
       if (event.type === 'Click') {
         // eslint-disable-next-line no-console
