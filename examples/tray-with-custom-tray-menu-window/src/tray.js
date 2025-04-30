@@ -1,27 +1,33 @@
 import { window } from '@tauri-apps/api'
 import { defaultWindowIcon } from '@tauri-apps/api/app'
+import { invoke } from '@tauri-apps/api/core'
 import { TrayIcon } from '@tauri-apps/api/tray'
 import { Webview } from '@tauri-apps/api/webview'
 import { Window } from '@tauri-apps/api/window'
 import { handleIconState } from '@tauri-apps/plugin-positioner'
 
 /**
- * Initialize the system tray icon and menu
+ * Initialize the system tray icon and custom window
  */
 export async function initTray() {
   try {
     // eslint-disable-next-line no-console
     console.log('Initializing system tray...')
     const appWindow = window.getCurrentWindow()
-    const trayWindow = createTrayCustomWindow()
+    const trayWindow = await createTrayCustomWindow()
 
     const action = async (event) => {
       await handleIconState(event)
 
       if (event.type === 'Click') {
-        // eslint-disable-next-line no-console
-        console.log('Tray icon clicked')
-        trayWindow.show()
+        if (await trayWindow.isVisible()) {
+          // If the tray window is visible, hide it
+          await trayWindow.hide()
+        }
+        else {
+          await trayWindow.show()
+          await invoke('move_window', { windowLabel: 'tray-window' })
+        }
       }
     }
 
@@ -53,9 +59,12 @@ export async function initTray() {
   }
 }
 
-function createTrayCustomWindow(url = '../index.html') {
+async function createTrayCustomWindow(url = '../index.html') {
   const trayKey = 'tray-window'
-  const customTrayWindow = new Window(trayKey, {
+
+  const trayWindow = await Window.getByLabel(trayKey)
+
+  const customTrayWindow = trayWindow || new Window(trayKey, {
     focus: true,
     decorations: false,
     resizable: false,
@@ -83,8 +92,6 @@ function createTrayCustomWindow(url = '../index.html') {
       // The webview was created successfully
       // eslint-disable-next-line no-console
       console.log('Webview created successfully')
-      // customTrayWindow.show()
-      // webview.show()
     })
     webview.once('tauri://error', (e) => {
       // The webview encountered an error
