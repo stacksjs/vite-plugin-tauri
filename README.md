@@ -38,7 +38,7 @@ bun add -D @stacksjs/vite-plugin-tauri
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite'
-import Tauri from 'vite-plugin-tauri'
+import Tauri from '@stacks/vite-plugin-tauri'
 
 export default defineConfig({
   plugins: [
