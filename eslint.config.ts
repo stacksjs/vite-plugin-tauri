@@ -12,7 +12,7 @@ const config: ESLintConfig = stacks({
   yaml: true,
   ignores: [
     'fixtures/**',
-    'example/src-tauri/**',
+    'examples/**/src-tauri/**',
   ],
 })
 

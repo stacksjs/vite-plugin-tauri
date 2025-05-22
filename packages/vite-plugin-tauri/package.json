@@ -50,6 +50,7 @@
     "prepublishOnly": "bun --bun run build"
   },
   "dependencies": {
+    "@tauri-apps/plugin-positioner": "^2.2.0",
     "@tauri-apps/api": "^2.5.0",
     "@tauri-apps/cli": "^2.5.0",
     "bunfig": "^0.8.4"
