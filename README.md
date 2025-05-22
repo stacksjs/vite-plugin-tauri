@@ -56,7 +56,7 @@ The plugin accepts an optional configuration object. Here's an example with avai
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite'
-import Tauri from 'vite-plugin-tauri'
+import Tauri from '@stacks/vite-plugin-tauri'
 
 export default defineConfig({
   plugins: [
