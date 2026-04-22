@@ -35,7 +35,7 @@
   "devDependencies": {
     "@stacksjs/docs": "^0.70.23",
     "@types/bun": "^1.2.11",
-    "bumpp": "^10.1.0",
+    "bumpp": "^11.0.1",
     "bun-plugin-dtsx": "^0.21.9",
     "changelogen": "^0.6.1",
     "typescript": "^5.8.3",
