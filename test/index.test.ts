@@ -42,7 +42,7 @@ const mockUtils = {
   getPackageJson: mock<() => { name: string }>(() => ({ name: 'test-app' })),
 }
 
-mock.module('../src/utils', () => ({
+mock.module('../packages/vite-plugin-tauri/src/utils', () => ({
   confirm: mockUtils.confirm,
   getPackageJson: mockUtils.getPackageJson,
 }))

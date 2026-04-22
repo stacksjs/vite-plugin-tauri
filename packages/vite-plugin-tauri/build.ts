@@ -5,6 +5,7 @@ console.log('Building...')
 
 // await $`rm -rf ./dist`
 
+// eslint-disable-next-line ts/no-top-level-await
 const result = await Bun.build({
   entrypoints: ['./src/index.ts'],
   outdir: './dist',
