@@ -64,7 +64,7 @@ This will:
 
 ## Using Custom Development URLs
 
-By default, the plugin will use the Vite development server URL (usually something like `http://localhost:5173`). If you need to use a custom development URL, you can do so by configuring your Tauri application after initialization.
+By default, the plugin will use the Vite development server URL (usually something like `<http://localhost:5173>`). If you need to use a custom development URL, you can do so by configuring your Tauri application after initialization.
 
 ## Development Environment Variables
 

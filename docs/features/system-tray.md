@@ -2,7 +2,7 @@
 
 vite-plugin-tauri provides built-in support for creating system tray applications with Tauri.
 
-## What is System Tray?
+## What is System Tray
 
 A system tray (also known as notification area or status bar) is an area where small icons appear, typically in the corner of the desktop screen. Applications can use the system tray to provide quick access to their functionality without having a full window open.
 
@@ -205,7 +205,7 @@ const menu = await Menu.new({
       text: 'Quit',
       action: () => {
         // Properly quit the application
-        window.__TAURI__.process.exit(0)
+        window.**TAURI**.process.exit(0)
       }
     }
   ]

@@ -57,7 +57,6 @@
 
 ## ...main
 
-
 ### 📖 Documentation
 
 - Add initial docs ([a4f81c6](https://github.com/stacksjs/vite-plugin-tauri/commit/a4f81c6))
@@ -72,4 +71,3 @@
 ### ❤️ Contributors
 
 - Chris ([@chrisbbreuer](https://github.com/chrisbbreuer))
-

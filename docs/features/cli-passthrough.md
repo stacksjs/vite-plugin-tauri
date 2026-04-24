@@ -2,7 +2,7 @@
 
 vite-plugin-tauri provides a powerful CLI passthrough feature that allows you to send arguments directly to the Tauri CLI from your Vite commands.
 
-## What is CLI Passthrough?
+## What is CLI Passthrough
 
 CLI passthrough enables you to pass command-line arguments from your Vite commands directly to the Tauri CLI, giving you access to all Tauri CLI features without needing to call the Tauri CLI directly.
 

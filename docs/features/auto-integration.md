@@ -2,7 +2,7 @@
 
 One of the key features of vite-plugin-tauri is its seamless auto-integration with your Vite project.
 
-## What is Auto Integration?
+## What is Auto Integration
 
 Auto integration means the plugin automatically detects if a Tauri project exists in your workspace and, if not, offers to initialize one for you. This eliminates the need for manual setup steps and configuration to get Tauri working with your Vite application.
 

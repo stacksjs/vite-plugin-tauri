@@ -35,5 +35,3 @@ features:
     icon: "💼"
     details: "Works out of the box with sensible defaults."
 ---
-
-<Home />

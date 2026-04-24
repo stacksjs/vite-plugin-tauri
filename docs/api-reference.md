@@ -28,31 +28,41 @@ export default defineConfig({
 ```typescript
 interface TauriConfig {
   /**
+
    * System tray configuration options
+
    */
   systemTray?: {
     /**
+
      * Enable system tray support
      * @default false
+
      */
     enabled?: boolean
 
     /**
+
      * Enable menu on left click
      * @default true
+
      */
     menuOnLeftClick?: boolean
 
     /**
+
      * Use the app icon as the tray icon
      * @default true
+
      */
     useAppIcon?: boolean
   }
 
   /**
+
    * Additional configuration options for the Tauri plugin.
    * This is currently kept flexible for future extensions.
+
    */
   [key: string]: unknown
 }
@@ -70,11 +80,11 @@ function tauri(config?: TauriConfig): PluginOption
 
 Parameters:
 
-- `config` (optional): Configuration object for the plugin
+* `config` (optional): Configuration object for the plugin
 
 Returns:
 
-- `PluginOption`: A Vite plugin configuration object
+* `PluginOption`: A Vite plugin configuration object
 
 ## Utility Functions
 
@@ -90,7 +100,7 @@ function getTauriConfPath(): string | null
 
 Returns:
 
-- `string | null`: The absolute path to the Tauri configuration file or null if not found
+* `string | null`: The absolute path to the Tauri configuration file or null if not found
 
 ### initTauri
 
@@ -112,11 +122,11 @@ function parseTauriArgs(args: string[]): string[] | null
 
 Parameters:
 
-- `args`: The command line arguments array
+* `args`: The command line arguments array
 
 Returns:
 
-- `string[] | null`: An array of Tauri-specific arguments or null if none found
+* `string[] | null`: An array of Tauri-specific arguments or null if none found
 
 ## Examples
 
