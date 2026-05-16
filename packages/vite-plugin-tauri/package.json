@@ -50,15 +50,15 @@
     "prepublishOnly": "bun --bun run build"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.5.0",
-    "@tauri-apps/cli": "^2.5.0",
-    "bunfig": "^0.8.4",
+    "@tauri-apps/api": "^2.11.0",
+    "@tauri-apps/cli": "^2.11.2",
+    "bunfig": "^0.15.13",
     "fast-glob": "^3.3.3",
     "local-pkg": "^1.1.2"
   },
   "devDependencies": {
-    "typescript": "^5.8.3",
-    "vite": "^6.3.4"
+    "typescript": "^5.9.3",
+    "vite": "^6.4.2"
   },
   "simple-git-hooks": {
     "pre-commit": "bunx lint-staged"
