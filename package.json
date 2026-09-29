@@ -30,7 +30,7 @@
     "preview:docs": "bun --bun vitepress preview docs",
     "format": "bunx --bun pickier . --format",
     "format:fix": "bunx --bun pickier . --format --write",
-    "postinstall": "bunx git-hooks"
+    "postinstall": "bunx bun-git-hooks"
   },
   "devDependencies": {
     "@stacksjs/docs": "^0.70.23",
